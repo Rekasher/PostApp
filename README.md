@@ -32,8 +32,6 @@ $ docker-compose up -d
 # generate prisma database
 $ npx prisma generate --schema=./prisma/schema
 
-# production mode
-$ npx prisma dev --schema=./prisma/schema
 
 # push database to our docker container
 $ npx prisma db push --schema=./prisma/schema

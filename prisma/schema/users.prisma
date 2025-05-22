@@ -1,4 +1,4 @@
-model User {
+model Users {
   id         Int      @id @default(autoincrement())
   user_name  String   @unique
   email      String   @unique
@@ -7,7 +7,7 @@ model User {
   updated_at DateTime
 
   role_id Int
-  role    Role @relation(fields: [role_id], references: [id])
+  role    Roles @relation(fields: [role_id], references: [id])
 
   comments Comments[]
   posts    Posts[]

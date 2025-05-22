@@ -5,7 +5,7 @@ model Comments {
   updated_at DateTime
 
   user_id Int
-  user    User @relation(fields: [user_id], references: [id])
+  user    Users @relation(fields: [user_id], references: [id])
 
   posts_id Int
   Posts    Posts @relation(fields: [posts_id], references: [id])

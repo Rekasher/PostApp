@@ -5,7 +5,7 @@ model Posts {
   updated_at DateTime
 
   user_id Int
-  user    User @relation(fields: [user_id], references: [id])
+  user    Users @relation(fields: [user_id], references: [id])
 
   category_id Int
   category    Categories @relation(fields: [category_id], references: [id])
