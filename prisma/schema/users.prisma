@@ -1,10 +1,10 @@
 model Users {
   id         Int      @id @default(autoincrement())
-  user_name  String   @unique
-  email      String   @unique
-  password   String
-  created_at DateTime
-  updated_at DateTime
+  user_name  String   @unique @db.VarChar(25)
+  email      String   @unique @db.VarChar(50)
+  password   String   @db.VarChar(100)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   role_id Int
   role    Roles @relation(fields: [role_id], references: [id])

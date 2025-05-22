@@ -3,8 +3,8 @@ services:
     container_name: postgres_posts_database
     image: postgres:17
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: posts
     ports:
       - "5432:5432"

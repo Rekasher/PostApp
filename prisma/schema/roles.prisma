@@ -1,6 +1,6 @@
 model Roles {
   id        Int    @id @default(autoincrement())
-  role_name String
+  role_name String @db.VarChar(10)
 
   user Users[]
 }

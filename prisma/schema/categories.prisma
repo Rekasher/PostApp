@@ -1,8 +1,8 @@
 model Categories {
   id            Int      @id @default(autoincrement())
-  category_name String
-  created_at    DateTime
-  updated_at    DateTime
+  category_name String   @db.VarChar(20)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
 
   parent_id Int?
   parent    Categories?  @relation("CategoryToChildren", fields: [parent_id], references: [id])

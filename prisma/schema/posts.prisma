@@ -1,8 +1,8 @@
 model Posts {
   id         Int      @id @default(autoincrement())
-  content    String
-  created_at DateTime
-  updated_at DateTime
+  content    String   @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   user_id Int
   user    Users @relation(fields: [user_id], references: [id])
