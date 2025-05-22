@@ -1,0 +1,12 @@
+model Categories {
+  id            Int      @id @default(autoincrement())
+  category_name String
+  created_at    DateTime
+  updated_at    DateTime
+
+  parent_id Int?
+  parent    Categories?  @relation("CategoryToChildren", fields: [parent_id], references: [id])
+  children  Categories[] @relation("CategoryToChildren")
+
+  posts Posts[]
+}
