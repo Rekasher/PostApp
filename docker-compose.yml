@@ -1,20 +1,16 @@
 services:
   postgres:
-    container_name: postgres_posts_database
+    env_file:
+      - .env
+    container_name: ${DOCKER_CONTAINER_NAME}
     image: postgres:17
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: posts
+      POSTGRES_USER: ${DOCKER_USER}
+      POSTGRES_PASSWORD: ${DOCKER_PASSWORD}
+      POSTGRES_DB: ${DOCKER_DB}
     ports:
-      - "5432:5432"
+      - "${DOCKER_PORT}:${DOCKER_PORT}"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U root -d posts" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
 volumes:
   postgres-data:
