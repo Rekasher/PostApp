@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Categories } from './modules/categories/entities/category.entity';
-import { Users } from './modules/user/entities/user.entity';
-import { Posts } from './modules/posts/entities/posts..entity';
-import { Comments } from './modules/comments/entities/comments.entity';
-import { Roles } from './modules/roles/entities/role.entity';
+import { Categories } from './db/category-entities/category.entity';
+import { Users } from './db/user-entities/user.entity';
+import { Posts } from './db/post-entities/posts..entity';
+import { Comments } from './db/comment-entities/comments.entity';
+import { Roles } from './db/role-entities/role.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/users.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './modules/user/users.module';
     }),
     AuthModule,
     UserModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}
