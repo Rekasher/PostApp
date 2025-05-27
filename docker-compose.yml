@@ -1,0 +1,16 @@
+services:
+  postgres:
+    env_file:
+      - .env
+    container_name: ${DOCKER_CONTAINER_NAME}
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${DATA_BASE_USER}
+      POSTGRES_PASSWORD: ${DATA_BASE_PASSWORD}
+      POSTGRES_DB: ${DATA_BASE_NAME}
+    ports:
+      - "${DATA_BASE_PORT}:${DATA_BASE_PORT}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:
