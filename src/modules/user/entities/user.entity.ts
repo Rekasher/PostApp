@@ -1,9 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Roles } from './role.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Roles } from '../../roles/entities/role.entity';
 
 @Entity('users')
 export class Users {
-
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -22,11 +27,10 @@ export class Users {
   @Column({ type: 'timestamptz', default: () => 'NOW()' })
   updated_at: Date;
 
-  @Column()
+  @Column({ default: 111 })
   role_id: number;
 
-  @OneToOne(() => Roles, {eager: true})
+  @ManyToOne(() => Roles, { eager: true })
   @JoinColumn({ name: 'role_id' })
   roles: Roles;
-
 }

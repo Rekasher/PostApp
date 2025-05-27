@@ -1,8 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('categories')
 export class Categories {
-
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -18,8 +23,7 @@ export class Categories {
   @Column({ nullable: true })
   parent_id: number;
 
-  @ManyToOne(() => Categories, {eager: true})
+  @ManyToOne(() => Categories, { eager: true })
   @JoinColumn({ name: 'parent_id' })
   categories: Categories;
-
 }

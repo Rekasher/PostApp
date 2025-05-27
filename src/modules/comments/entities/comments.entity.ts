@@ -1,10 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Users } from '../../user/entities/user.entity';
 import { Posts } from '../../posts/entities/posts..entity';
 
 @Entity('comments')
 export class Comments {
-
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -20,15 +25,14 @@ export class Comments {
   @Column()
   user_id: number;
 
-  @ManyToOne(() => Users, {eager: true})
+  @ManyToOne(() => Users, { eager: true })
   @JoinColumn({ name: 'user_id' })
   creator: Users;
 
   @Column()
   posts_id: number;
 
-  @ManyToOne(() => Posts, {eager: true})
+  @ManyToOne(() => Posts, { eager: true })
   @JoinColumn({ name: 'posts_id' })
   posts: Users;
-
 }
