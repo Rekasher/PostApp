@@ -23,28 +23,6 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Create db in docker map
-
-```bash
-# up docker container
-$ docker-compose up -d
-
-# generate prisma database
-$ npx prisma generate --schema=./prisma/schema
-
-
-# push database to our docker container
-$ npx prisma db push --schema=./prisma/schema
-
-# down docker container
-$ docker-compose down
-
-# up docker container
-$ docker-compose up -d
-
-```
-
-
 
 ## Support
 
