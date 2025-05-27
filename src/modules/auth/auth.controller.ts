@@ -1,17 +1,41 @@
-import { Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import { SignUpDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Post()
-  SignUp() {
-    return this.authService.SignUp();
+  @Post('/sign-in')
+  async signIn(@Req() req) {
+    const user = await this.authService.validateUser(
+      req.body.email,
+      req.body.password,
+    );
+
+    if (!user) {
+      throw new UnauthorizedException({ message: 'Invalid email or password' });
+    }
+
+    return this.authService.signIn(user);
   }
 
-  @Post()
-  signIn() {
-    return this.authService.SignIn();
+  @Post('/sign-up')
+  async signUp(@Body() signUpDto: SignUpDto) {
+    await this.authService.signUp(signUpDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Req() req) {
+    return req.logout();
   }
 }

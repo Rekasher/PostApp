@@ -1,35 +1,65 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UserService {
-
+export class UsersService {
   constructor(
     @InjectRepository(Users)
-    private usersRepository: Repository<Users>
+    private usersRepository: Repository<Users>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return this.usersRepository.create(createUserDto);
+  async create(userDto: CreateUserDto) {
+    try {
+      const { email, name, password } = userDto;
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const user = this.usersRepository.create({
+        user_name: name,
+        email: email,
+        password: hashedPassword,
+      });
+
+      await this.usersRepository.save(user);
+      const { password: _, ...result } = user;
+      return result;
+    } catch (error) {
+      throw new UnauthorizedException(error);
+    }
   }
 
-  findAll(): Promise<Users[] | null> {
-    return this.usersRepository.find();
+  async findAll(): Promise<Users[]> {
+    try {
+      return await this.usersRepository.find();
+    } catch (error) {
+      throw new UnauthorizedException({ message: 'Users not found' });
+    }
   }
 
-  findOne(id: number): Promise<Users | null> {
-    return this.usersRepository.findOneBy({id});
+  async findById(id: number): Promise<Users | null> {
+    try {
+      return await this.usersRepository.findOneBy({ id });
+    } catch (error) {
+      throw new UnauthorizedException({ message: 'Users not found' });
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.usersRepository.update(id, updateUserDto);
+  async findByEmail(email: string): Promise<Users | null> {
+    try {
+      return await this.usersRepository.findOneBy({ email });
+    } catch (error) {
+      throw new UnauthorizedException({ message: 'Users not found' });
+    }
   }
 
-  async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+  async findByName(user_name: string): Promise<Users | null> {
+    try {
+      return await this.usersRepository.findOneBy({ user_name });
+    } catch (error) {
+      throw new UnauthorizedException({ message: 'Users not found' });
+    }
   }
 }
