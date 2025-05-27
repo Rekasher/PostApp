@@ -9,14 +9,10 @@ import { BaseEntity } from '../base.entity';
 
 @Entity('posts')
 export class Posts extends BaseEntity{
-
   @Column({ type: 'text' })
   content: string;
 
-  @Column()
-  category_id: number;
-
-  @ManyToOne(() => Categories, { eager: true })
+  @ManyToOne(() => Categories, { nullable: false })
   @JoinColumn({ name: 'category_id' })
   categories: Categories;
 }

@@ -1,15 +1,16 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
 } from 'typeorm';
-import { Roles } from '../role-entities/role.entity';
 import { BaseEntity } from '../base.entity';
 
-@Entity('users')
-export class Users extends BaseEntity{
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+}
 
+@Entity('users')
+export class Users extends BaseEntity {
 
   @Column({ unique: true, type: 'varchar', length: 25 })
   user_name: string;
@@ -20,10 +21,11 @@ export class Users extends BaseEntity{
   @Column({ type: 'varchar', length: 100 })
   password: string;
 
-  @Column({ default: 111 })
-  role_id: number;
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
 
-  @ManyToOne(() => Roles, { eager: true })
-  @JoinColumn({ name: 'role_id' })
-  roles: Roles;
 }
