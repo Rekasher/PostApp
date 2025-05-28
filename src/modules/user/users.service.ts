@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users } from '../../db/user-entities/user.entity';
 import { Repository } from 'typeorm';
@@ -27,7 +27,7 @@ export class UsersService {
       const { password: _, ...result } = user;
       return result;
     } catch (error) {
-      throw new UnauthorizedException(error);
+      throw new BadRequestException(error);
     }
   }
 
@@ -35,7 +35,7 @@ export class UsersService {
     try {
       return await this.usersRepository.find();
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new NotFoundException({ error: error, message: 'Users not found' });
     }
   }
 
@@ -43,23 +43,20 @@ export class UsersService {
     try {
       return await this.usersRepository.findOneBy({ id });
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new NotFoundException({ error: error, message: 'Users not found' });
     }
   }
 
-  async findByEmail(email: string): Promise<Users | null> {
+  async findByAttributes(atr: Omit<CreateUserDto, "password">): Promise<Users | null> {
     try {
-      return await this.usersRepository.findOneBy({ email });
+      return await this.usersRepository.findOne({
+        where: [
+          {email: atr.email},
+          {user_name: atr.name},
+        ],
+      });
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
-    }
-  }
-
-  async findByName(user_name: string): Promise<Users | null> {
-    try {
-      return await this.usersRepository.findOneBy({ user_name });
-    } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new NotFoundException({ error: error, message: 'Users not found' });
     }
   }
 }

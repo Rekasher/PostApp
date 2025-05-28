@@ -5,11 +5,11 @@ export class SignUpDto {
   name: string;
 
   @IsNotEmpty({ message: 'email is required' })
-  @IsEmail({}, { message: 'email is required' })
+  @IsEmail({}, { message: "it's not email format" })
   email: string;
 
   @IsNotEmpty({ message: 'password is required' })
-  @Length(8, 50, { message: 'Password must be at least 8 characters' })
+  @Length(8, 50, { message: 'password must be at least 8 characters' })
   password: string;
 }
 
@@ -19,6 +19,6 @@ export class SignInDto {
   email: string;
 
   @IsNotEmpty({ message: 'password is required' })
-  @Length(8, 20, { message: 'Password must be at least 8 characters' })
+  @Length(8, 20, { message: 'password must be at least 8 characters' })
   password: string;
 }
