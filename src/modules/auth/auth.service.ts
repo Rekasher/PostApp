@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../user/users.service';
@@ -36,15 +35,15 @@ export class AuthService {
     return await this.userService.create({ email, name, password });
   }
 
-  async signIn(user: Users) {
+  async signIn(user: Users): Promise<any> {
     const payload = {
       user_id: user.id,
       user_name: user.user_name,
       user_email: user.email,
-      role: user.roles.role_name,
+      role: user.role,
     };
     return {
-      access_token: this.jwtService.sign(payload),
+       access_token: this.jwtService.sign(payload),
     };
   }
 

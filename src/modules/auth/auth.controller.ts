@@ -4,11 +4,9 @@ import {
   Post,
   Req,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { SignUpDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +23,7 @@ export class AuthController {
       throw new UnauthorizedException({ message: 'Invalid email or password' });
     }
 
-    return this.authService.signIn(user);
+    return await this.authService.signIn(user);
   }
 
   @Post('/sign-up')
@@ -33,9 +31,4 @@ export class AuthController {
     await this.authService.signUp(signUpDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('logout')
-  async logout(@Req() req) {
-    return req.logout();
-  }
 }

@@ -3,18 +3,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Categories } from './db/category-entities/category.entity';
 import { Users } from './db/user-entities/user.entity';
-import { Posts } from './db/post-entities/posts..entity';
-import { Comments } from './db/comment-entities/comments.entity';
-import { Roles } from './db/role-entities/role.entity';
+import { Posts } from './db/post-entities/post.entity';
+import { Comments } from './db/comment-entities/comment.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/users.module';
-import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -25,13 +21,12 @@ import { CategoriesModule } from './modules/categories/categories.module';
         username: config.get('DATA_BASE_USER'),
         password: config.get('DATA_BASE_PASSWORD'),
         database: config.get('DATA_BASE_NAME'),
-        entities: [Users, Categories, Posts, Comments, Roles],
+        entities: [Users, Categories, Posts, Comments],
         synchronize: true,
       }),
     }),
     AuthModule,
     UserModule,
-    CategoriesModule,
   ],
 })
 export class AppModule {}
