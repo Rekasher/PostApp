@@ -7,6 +7,7 @@ import { Posts } from './db/post-entities/post.entity';
 import { Comments } from './db/comment-entities/comment.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/users.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './modules/user/users.module';
     }),
     AuthModule,
     UserModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}
