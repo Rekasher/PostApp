@@ -13,8 +13,4 @@ export const env = {
   DOCKER_PORT: parseInt(process.env.DOCKER_PORT || '5432', 10),
 
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
-
-  ROLES_KEY: process.env.ROLES_KEY,
-  ROLE_USER_ID: process.env.ROLE_USER_ID,
-  ROLE_USER_NAME: process.env.ROLE_USER_NAME,
 };
