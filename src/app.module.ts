@@ -5,10 +5,12 @@ import { Categories } from './db/category-entities/category.entity';
 import { Users } from './db/user-entities/user.entity';
 import { Posts } from './db/post-entities/post.entity';
 import { Comments } from './db/comment-entities/comment.entity';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -21,8 +23,10 @@ import { Comments } from './db/comment-entities/comment.entity';
         database: config.get('DATA_BASE_NAME'),
         entities: [Users, Categories, Posts, Comments],
         synchronize: true,
-      })
-    })
+      }),
+    }),
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}

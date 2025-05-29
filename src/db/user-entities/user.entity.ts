@@ -1,7 +1,4 @@
-import {
-  Column,
-  Entity,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../base.entity';
 
 export enum UserRole {
@@ -11,7 +8,6 @@ export enum UserRole {
 
 @Entity('users')
 export class Users extends BaseEntity {
-
   @Column({ unique: true, type: 'varchar', length: 25 })
   user_name: string;
 
@@ -27,5 +23,4 @@ export class Users extends BaseEntity {
     default: UserRole.USER,
   })
   role: UserRole;
-
 }
