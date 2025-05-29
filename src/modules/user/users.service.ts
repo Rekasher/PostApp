@@ -35,7 +35,7 @@ export class UsersService {
     try {
       return await this.usersRepository.find();
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new UnauthorizedException(error);
     }
   }
 
@@ -43,7 +43,7 @@ export class UsersService {
     try {
       return await this.usersRepository.findOneBy({ id });
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new UnauthorizedException(error);
     }
   }
 
@@ -51,7 +51,7 @@ export class UsersService {
     try {
       return await this.usersRepository.findOneBy({ email });
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new UnauthorizedException(error);
     }
   }
 
@@ -59,7 +59,7 @@ export class UsersService {
     try {
       return await this.usersRepository.findOneBy({ user_name });
     } catch (error) {
-      throw new UnauthorizedException({ message: 'Users not found' });
+      throw new UnauthorizedException(error);
     }
   }
 }
