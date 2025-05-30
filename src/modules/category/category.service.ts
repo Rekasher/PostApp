@@ -1,5 +1,7 @@
 import {
-  Injectable, NotFoundException,
+  BadRequestException,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Categories } from '../../db/category-entities/category.entity';
@@ -10,7 +12,10 @@ import { DataSource, EntityNotFoundError, TreeRepository } from 'typeorm';
 export class CategoryService {
   private readonly treeRepository: TreeRepository<Categories>;
 
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {
+  constructor(
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
+  ) {
     this.treeRepository = this.dataSource.getTreeRepository(Categories);
   }
 
@@ -26,14 +31,14 @@ export class CategoryService {
         });
       }
       return this.treeRepository.save(category);
-    }catch(error) {
+    } catch (error) {
       throw new EntityNotFoundError('Parent category not found', error);
     }
   }
 
   async findAll(): Promise<Categories[]> {
     try {
-      return this.treeRepository.findTrees();
+      return this.treeRepository.findTrees({ relations: ['posts'] });
     } catch (error) {
       throw new NotFoundException(error);
     }
@@ -43,9 +48,41 @@ export class CategoryService {
     try {
       const node = await this.treeRepository.findOneOrFail({ where: { id } });
 
-      return this.treeRepository.findDescendantsTree(node);
+      return this.treeRepository.findDescendantsTree(node, {
+        relations: ['posts'],
+      });
     } catch (error) {
       throw new EntityNotFoundError('Category not found', error);
+    }
+  }
+
+  async delete(id: number): Promise<any> {
+    try {
+      const node = await this.treeRepository.findOneOrFail({
+        where: { id },
+      });
+      const categories = await this.treeRepository.findDescendants(node, {
+        relations: ['posts'],
+      });
+
+      const hasPosts = categories.some((category) => category.posts.length > 0);
+
+      if (hasPosts) {
+        return new BadRequestException(
+          'Impossible to delete categories with posts',
+        );
+      }
+
+      await this.treeRepository.delete(
+        categories.map((category) => category.id).reverse(),
+      );
+
+      return {
+        success: true,
+        message: 'Category deleted successfully.',
+      };
+    } catch (error) {
+      throw new NotFoundException(error, 'No exist category');
     }
   }
 }

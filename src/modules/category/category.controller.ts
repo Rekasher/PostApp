@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -38,6 +39,15 @@ export class CategoryController {
   async findById(@Param('id') id: number) {
     try {
       return await this.categoryService.findById(id);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    try {
+      return await this.categoryService.delete(id);
     } catch (error) {
       throw new BadRequestException(error);
     }

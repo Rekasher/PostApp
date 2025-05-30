@@ -1,11 +1,13 @@
 import {
   Column,
   Entity,
+  OneToMany,
   Tree,
   TreeChildren,
   TreeParent,
 } from 'typeorm';
 import { BaseEntity } from '../base.entity';
+import { Posts } from '../post-entities/post.entity';
 
 @Entity('categories')
 @Tree('materialized-path')
@@ -18,4 +20,7 @@ export class Categories extends BaseEntity {
 
   @TreeParent()
   parent: Categories;
+
+  @OneToMany(() => Posts, (post) => post.category)
+  posts: Posts[];
 }
