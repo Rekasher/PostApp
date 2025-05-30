@@ -26,10 +26,10 @@ export class AuthService {
 
     await this.userService.create({ email, name, password });
 
-    return ({
+    return {
       success: true,
       message: 'User successfully created.',
-    })
+    };
   }
 
   async signIn({ email, password }: SignInDto): Promise<any> {

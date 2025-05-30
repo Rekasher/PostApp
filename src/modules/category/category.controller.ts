@@ -1,4 +1,14 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -18,7 +28,7 @@ export class CategoryController {
     try {
       return await this.categoryService.create(body);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error, 'Not valid data');
     }
   }
 
@@ -27,7 +37,7 @@ export class CategoryController {
     try {
       return await this.categoryService.findAll();
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error, 'Not valid data');
     }
   }
 
@@ -36,7 +46,7 @@ export class CategoryController {
     try {
       return await this.categoryService.findById(id);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error, 'Not valid data');
     }
   }
 
@@ -46,7 +56,7 @@ export class CategoryController {
     try {
       return await this.categoryService.delete(id);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error, 'Not valid data');
     }
   }
 
@@ -56,7 +66,7 @@ export class CategoryController {
     try {
       return await this.categoryService.update(id, body);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error, 'Not valid data');
     }
   }
 }

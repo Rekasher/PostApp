@@ -6,7 +6,7 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Categories } from '../../db/category-entities/category.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource, EntityNotFoundError, TreeRepository } from 'typeorm';
+import { DataSource, TreeRepository } from 'typeorm';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class CategoryService {
       }
       return await this.treeRepository.save(category);
     } catch (error) {
-      throw new EntityNotFoundError('Parent category not found', error);
+      throw new NotFoundException('Parent category not found', error);
     }
   }
 
@@ -53,7 +53,7 @@ export class CategoryService {
         relations: ['posts'],
       });
     } catch (error) {
-      throw new EntityNotFoundError('Category not found', error);
+      throw new NotFoundException('Category not found', error);
     }
   }
 

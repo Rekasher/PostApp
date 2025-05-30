@@ -10,7 +10,7 @@ export class AuthController {
   async signIn(@Body() body: SignInDto) {
     try {
       return await this.authService.signIn(body);
-    }catch(error) {
+    } catch (error) {
       throw new BadRequestException('Not valid data', error);
     }
   }
@@ -19,7 +19,7 @@ export class AuthController {
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
       return await this.authService.signUp(signUpDto);
-    }catch(error) {
+    } catch (error) {
       throw new BadRequestException('Not valid data', error);
     }
   }
