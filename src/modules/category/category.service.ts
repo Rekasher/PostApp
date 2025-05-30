@@ -115,6 +115,8 @@ export class CategoryService {
         });
       }
 
+      category.updated_at = new Date();
+
       await this.treeRepository.save(category);
 
       return {
