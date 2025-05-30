@@ -7,6 +7,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { Categories } from '../../db/category-entities/category.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, EntityNotFoundError, TreeRepository } from 'typeorm';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -30,7 +31,7 @@ export class CategoryService {
           where: { id: parent_id },
         });
       }
-      return this.treeRepository.save(category);
+      return await this.treeRepository.save(category);
     } catch (error) {
       throw new EntityNotFoundError('Parent category not found', error);
     }
@@ -38,7 +39,7 @@ export class CategoryService {
 
   async findAll(): Promise<Categories[]> {
     try {
-      return this.treeRepository.findTrees({ relations: ['posts'] });
+      return await this.treeRepository.findTrees({ relations: ['posts'] });
     } catch (error) {
       throw new NotFoundException(error);
     }
@@ -48,7 +49,7 @@ export class CategoryService {
     try {
       const node = await this.treeRepository.findOneOrFail({ where: { id } });
 
-      return this.treeRepository.findDescendantsTree(node, {
+      return await this.treeRepository.findDescendantsTree(node, {
         relations: ['posts'],
       });
     } catch (error) {
@@ -80,6 +81,45 @@ export class CategoryService {
       return {
         success: true,
         message: 'Category deleted successfully.',
+      };
+    } catch (error) {
+      throw new NotFoundException(error, 'No exist category');
+    }
+  }
+
+  async update(id: number, data: UpdateCategoryDto): Promise<any> {
+    try {
+      const category = await this.treeRepository.findOneOrFail({
+        where: { id },
+      });
+
+      const { category_name, parent_id } = data;
+
+      if (category_name) {
+        category.category_name = category_name;
+      }
+
+      if (parent_id) {
+        const categories = await this.treeRepository.findDescendants(category);
+        const isChild = categories.some(
+          (category) => category.id === parent_id,
+        );
+
+        if (isChild)
+          return new BadRequestException(
+            'Impossible to move parent to child category',
+          );
+
+        category.parent = await this.treeRepository.findOneOrFail({
+          where: { id: parent_id },
+        });
+      }
+
+      await this.treeRepository.save(category);
+
+      return {
+        success: true,
+        message: 'Category was updated successfully',
       };
     } catch (error) {
       throw new NotFoundException(error, 'No exist category');

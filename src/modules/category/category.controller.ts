@@ -5,12 +5,14 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('category')
@@ -48,6 +50,15 @@ export class CategoryController {
   async delete(@Param('id') id: number) {
     try {
       return await this.categoryService.delete(id);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() body: UpdateCategoryDto) {
+    try {
+      return await this.categoryService.update(id, body);
     } catch (error) {
       throw new BadRequestException(error);
     }
