@@ -8,6 +8,7 @@ import { Comments } from './db/comment-entities/comment.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/users.module';
 import { CategoryModule } from './modules/category/category.module';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CategoryModule } from './modules/category/category.module';
     AuthModule,
     UserModule,
     CategoryModule,
+    PostModule,
   ],
 })
 export class AppModule {}
