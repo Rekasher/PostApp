@@ -16,12 +16,20 @@ export class AuthService {
   ) {}
 
   async signUp({ email, name, password }): Promise<any> {
-    const existingProfile = await this.userService.findByAttributes({ email, name });
+    const existingProfile = await this.userService.findByAttributes({
+      email,
+      name,
+    });
     if (existingProfile) {
       throw new ConflictException('User already exists');
     }
 
-    return await this.userService.create({ email, name, password });
+    await this.userService.create({ email, name, password });
+
+    return {
+      success: true,
+      message: 'User successfully created.',
+    };
   }
 
   async signIn({ email, password }: SignInDto): Promise<any> {

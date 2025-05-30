@@ -12,7 +12,7 @@ export class Comments extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   creator: Users;
 
-  @ManyToOne(() => Posts, { nullable: false })
+  @ManyToOne(() => Posts, (post) => post.id, { nullable: false })
   @JoinColumn({ name: 'posts_id' })
   post: Posts;
 }
