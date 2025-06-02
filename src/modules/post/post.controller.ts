@@ -1,0 +1,95 @@
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
+import { PostService } from './post.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AccessGuard } from './guards/access.guard';
+import { UpdatePostDto } from './dto/update-post.dto';
+
+@UseGuards(JwtAuthGuard)
+@Controller('post')
+export class PostController {
+  constructor(private readonly postService: PostService) {}
+
+  @Post()
+  async create(@Req() req, @Body() createPostDto: CreatePostDto) {
+    try {
+      const user_id = req.user.id;
+      console.log(user_id);
+      return await this.postService.create({
+        ...createPostDto,
+        user_id: user_id,
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  @Get()
+  async findAll() {
+    try {
+      return await this.postService.findAll();
+    } catch (error) {
+      throw new BadRequestException(error, 'Not valid data');
+    }
+  }
+
+  @Get('user')
+  async findByUser(@Req() req) {
+    try {
+      const id = req.user.user_id;
+
+      return await this.postService.findByUser(id);
+    } catch (error) {
+      throw new BadRequestException(error, 'Not valid data');
+    }
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    try {
+      return await this.postService.findById(id);
+    } catch (error) {
+      throw new BadRequestException(error, 'Not valid data');
+    }
+  }
+
+  @Get('category/:id')
+  async findByCategory(@Param('id') id: number) {
+    try {
+      return await this.postService.findByCategory(id);
+    } catch (error) {
+      throw new BadRequestException(error, 'Not valid data');
+    }
+  }
+
+  @UseGuards(AccessGuard)
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    try {
+      return await this.postService.delete(id);
+    } catch (error) {
+      throw new BadRequestException(error, 'Not valid data');
+    }
+  }
+
+  @UseGuards(AccessGuard)
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() body: UpdatePostDto) {
+    try {
+      return await this.postService.update(id, body);
+    } catch (error) {
+      throw new BadRequestException(error, 'Not valid data');
+    }
+  }
+}
