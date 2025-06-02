@@ -57,7 +57,7 @@ export class CategoryController {
       await this.categoryService.delete(id);
       return {
         success: true,
-        message: 'Category deleted successfully.',
+        message: 'Category was deleted successfully.',
       };
     } catch (error) {
       throw new BadRequestException(error, 'Not valid data');

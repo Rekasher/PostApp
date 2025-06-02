@@ -57,28 +57,32 @@ export class CategoryService {
     }
   }
 
-  async delete(id: number): Promise<DeleteResult | BadRequestException> {
+  async delete(
+    id: number,
+  ): Promise<DeleteResult | BadRequestException | NotFoundException> {
     try {
       const node = await this.treeRepository.findOneOrFail({
         where: { id },
       });
+
+      if (node) return new NotFoundException('Category not found');
+
       const categories = await this.treeRepository.findDescendants(node, {
         relations: ['posts'],
       });
 
       const hasPosts = categories.some((category) => category.posts.length > 0);
 
-      if (hasPosts) {
+      if (hasPosts)
         return new BadRequestException(
           'Impossible to delete categories with posts',
         );
-      }
 
       const categoriesIds = categories.map((category) => category.id).reverse();
 
       return await this.treeRepository.delete(categoriesIds);
     } catch (error) {
-      throw new NotFoundException(error, 'No exist category');
+      throw new NotFoundException(error, 'Category not found');
     }
   }
 
@@ -90,9 +94,9 @@ export class CategoryService {
         where: { id },
       });
 
-      if (category_name) {
-        category.category_name = category_name;
-      }
+      if (!category) return new NotFoundException('Category not found');
+
+      if (category_name?.trim()) category.category_name = category_name;
 
       if (parent_id) {
         const categories = await this.treeRepository.findDescendants(category);
@@ -114,7 +118,7 @@ export class CategoryService {
 
       return await this.treeRepository.save(category);
     } catch (error) {
-      throw new NotFoundException(error, 'No exist category');
+      throw new NotFoundException(error, 'Category not found');
     }
   }
 }
