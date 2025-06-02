@@ -43,7 +43,7 @@ export class PostService {
 
   async findAll(page: number): Promise<Posts[] | BadRequestException> {
     try {
-      const isExistPage = await this.checkPostsPage(page)
+      const isExistPage = await this.checkPostsPage(page);
       if (!isExistPage) return new BadRequestException('Page not found');
 
       return await this.postRepository.find({
@@ -67,9 +67,12 @@ export class PostService {
     }
   }
 
-  async findByCategory(id: number, page: number): Promise<Posts[] | BadRequestException> {
+  async findByCategory(
+    id: number,
+    page: number,
+  ): Promise<Posts[] | BadRequestException> {
     try {
-      const isExistPage = await this.checkPostsPage(page)
+      const isExistPage = await this.checkPostsPage(page);
       if (!isExistPage) return new BadRequestException('Page not found');
 
       return await this.postRepository.find({
@@ -83,9 +86,12 @@ export class PostService {
     }
   }
 
-  async findByUser(id: number, page: number): Promise<Posts[] | BadRequestException> {
+  async findByUser(
+    id: number,
+    page: number,
+  ): Promise<Posts[] | BadRequestException> {
     try {
-      const isExistPage = await this.checkPostsPage(page)
+      const isExistPage = await this.checkPostsPage(page);
       if (!isExistPage) return new BadRequestException('Page not found');
 
       return await this.postRepository.find({
@@ -140,10 +146,8 @@ export class PostService {
     }
   }
 
-  async checkPostsPage(page:number) {
+  async checkPostsPage(page: number) {
     const length = (await this.postRepository.find()).length;
-    console.log(length);
-    return !(page < 1 || (page-1) * 10 >= length);
-
+    return !(page < 1 || (page - 1) * 10 >= length);
   }
 }
