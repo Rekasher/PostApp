@@ -6,7 +6,7 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Categories } from '../../db/category-entities/category.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource, TreeRepository } from 'typeorm';
+import { DataSource, DeleteResult, TreeRepository } from 'typeorm';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class CategoryService {
       }
       return await this.treeRepository.save(category);
     } catch (error) {
-      throw new NotFoundException('Parent category not found', error);
+      throw new BadRequestException(error);
     }
   }
 
@@ -57,7 +57,7 @@ export class CategoryService {
     }
   }
 
-  async delete(id: number): Promise<any> {
+  async delete(id: number): Promise<DeleteResult | BadRequestException> {
     try {
       const node = await this.treeRepository.findOneOrFail({
         where: { id },
@@ -74,14 +74,9 @@ export class CategoryService {
         );
       }
 
-      await this.treeRepository.delete(
-        categories.map((category) => category.id).reverse(),
-      );
+      const categoriesIds = categories.map((category) => category.id).reverse();
 
-      return {
-        success: true,
-        message: 'Category deleted successfully.',
-      };
+      return await this.treeRepository.delete(categoriesIds);
     } catch (error) {
       throw new NotFoundException(error, 'No exist category');
     }
@@ -89,11 +84,11 @@ export class CategoryService {
 
   async update(id: number, data: UpdateCategoryDto): Promise<any> {
     try {
+      const { category_name, parent_id } = data;
+
       const category = await this.treeRepository.findOneOrFail({
         where: { id },
       });
-
-      const { category_name, parent_id } = data;
 
       if (category_name) {
         category.category_name = category_name;
@@ -117,12 +112,7 @@ export class CategoryService {
 
       category.updated_at = new Date();
 
-      await this.treeRepository.save(category);
-
-      return {
-        success: true,
-        message: 'Category was updated successfully',
-      };
+      return await this.treeRepository.save(category);
     } catch (error) {
       throw new NotFoundException(error, 'No exist category');
     }
