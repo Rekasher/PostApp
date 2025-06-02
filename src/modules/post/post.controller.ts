@@ -6,7 +6,7 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post, Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -35,20 +35,20 @@ export class PostController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Query('page') page: number) {
     try {
-      return await this.postService.findAll();
+      return await this.postService.findAll(page);
     } catch (error) {
       throw new BadRequestException(error, 'Not valid data');
     }
   }
 
   @Get('user')
-  async findByUser(@Req() req) {
+  async findByUser(@Req() req, @Query('page') page: number) {
     try {
       const id = req.user.user_id;
 
-      return await this.postService.findByUser(id);
+      return await this.postService.findByUser(id, page);
     } catch (error) {
       throw new BadRequestException(error, 'Not valid data');
     }
@@ -64,9 +64,9 @@ export class PostController {
   }
 
   @Get('category/:id')
-  async findByCategory(@Param('id') id: number) {
+  async findByCategory(@Param('id') id: number, @Query('page') page: number) {
     try {
-      return await this.postService.findByCategory(id);
+      return await this.postService.findByCategory(id, page);
     } catch (error) {
       throw new BadRequestException(error, 'Not valid data');
     }

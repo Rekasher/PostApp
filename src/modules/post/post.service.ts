@@ -41,10 +41,15 @@ export class PostService {
     }
   }
 
-  async findAll(): Promise<Posts[]> {
+  async findAll(page: number): Promise<Posts[] | BadRequestException> {
     try {
+      const isExistPage = await this.checkPostsPage(page)
+      if (!isExistPage) return new BadRequestException('Page not found');
+
       return await this.postRepository.find({
         relations: ['category'],
+        skip: (page - 1) * 10,
+        take: 10,
       });
     } catch (error) {
       throw new NotFoundException(error, 'Posts not found');
@@ -62,22 +67,32 @@ export class PostService {
     }
   }
 
-  async findByCategory(id: number): Promise<Posts[]> {
+  async findByCategory(id: number, page: number): Promise<Posts[] | BadRequestException> {
     try {
+      const isExistPage = await this.checkPostsPage(page)
+      if (!isExistPage) return new BadRequestException('Page not found');
+
       return await this.postRepository.find({
         where: { category: { id } },
         relations: ['category'],
+        skip: (page - 1) * 10,
+        take: 10,
       });
     } catch (error) {
       throw new NotFoundException(error, 'Posts not found');
     }
   }
 
-  async findByUser(id: number): Promise<Posts[]> {
+  async findByUser(id: number, page: number): Promise<Posts[] | BadRequestException> {
     try {
+      const isExistPage = await this.checkPostsPage(page)
+      if (!isExistPage) return new BadRequestException('Page not found');
+
       return await this.postRepository.find({
         where: { user: { id } },
         relations: ['category'],
+        skip: (page - 1) * 10,
+        take: 10,
       });
     } catch (error) {
       throw new NotFoundException(error, 'Posts not found');
@@ -123,5 +138,12 @@ export class PostService {
     } catch (error) {
       throw new NotFoundException(error, 'Post not found');
     }
+  }
+
+  async checkPostsPage(page:number) {
+    const length = (await this.postRepository.find()).length;
+    console.log(length);
+    return !(page < 1 || (page-1) * 10 >= length);
+
   }
 }
