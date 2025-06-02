@@ -24,8 +24,7 @@ export class PostController {
   @Post()
   async create(@Req() req, @Body() createPostDto: CreatePostDto) {
     try {
-      const user_id = req.user.id;
-      console.log(user_id);
+      const user_id = req.user.user_id;
       return await this.postService.create({
         ...createPostDto,
         user_id: user_id,
