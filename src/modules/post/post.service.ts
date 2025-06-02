@@ -51,14 +51,12 @@ export class PostService {
     }
   }
 
-  async findById(id: number): Promise<Posts[]> {
+  async findById(id: number): Promise<Posts> {
     try {
-      return [
-        await this.postRepository.findOneOrFail({
-          where: { id },
-          relations: ['category'],
-        }),
-      ];
+      return await this.postRepository.findOneOrFail({
+        where: { id },
+        relations: ['category', 'comments'],
+      });
     } catch (error) {
       throw new NotFoundException(error, 'Post not found');
     }
@@ -95,8 +93,6 @@ export class PostService {
 
       if (!result) return new NotFoundException('Post not found');
 
-      console.log(result);
-
       result.comments
         .map((comment) => comment.id)
         .forEach((id) => this.commentService.delete(id));
@@ -120,6 +116,8 @@ export class PostService {
           id: category_id,
         });
       }
+
+      post.updated_at = new Date();
 
       return await this.postRepository.save(post);
     } catch (error) {
