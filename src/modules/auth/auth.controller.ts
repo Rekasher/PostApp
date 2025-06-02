@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { SignInDto, SignUpDto } from './dto/create-auth.dto';
 import { AuthService } from './auth.service';
 
@@ -8,11 +8,19 @@ export class AuthController {
 
   @Post('/sign-in')
   async signIn(@Body() body: SignInDto) {
-    return await this.authService.signIn(body);
+    try {
+      return await this.authService.signIn(body);
+    } catch (error) {
+      throw new BadRequestException('Not valid data', error);
+    }
   }
 
   @Post('/sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
-    await this.authService.signUp(signUpDto);
+    try {
+      return await this.authService.signUp(signUpDto);
+    } catch (error) {
+      throw new BadRequestException('Not valid data', error);
+    }
   }
 }

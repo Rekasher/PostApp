@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users } from '../../db/user-entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -47,13 +52,10 @@ export class UsersService {
     }
   }
 
-  async findByAttributes(atr: Omit<CreateUserDto, "password">): Promise<Users | null> {
+  async findByAttributes(atr: UpdateUserDto): Promise<Users | null> {
     try {
       return await this.usersRepository.findOne({
-        where: [
-          {email: atr.email},
-          {user_name: atr.name},
-        ],
+        where: [{ email: atr.email }, { user_name: atr.name }],
       });
     } catch (error) {
       throw new NotFoundException({ error: error, message: 'Users not found' });
