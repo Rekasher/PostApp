@@ -13,7 +13,7 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostService } from './post.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AccessGuard } from './guards/access.guard';
+import { PostAccessGuard } from './guards/post-access.guard';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @UseGuards(JwtAuthGuard)
@@ -72,7 +72,7 @@ export class PostController {
     }
   }
 
-  @UseGuards(AccessGuard)
+  @UseGuards(PostAccessGuard)
   @Delete(':id')
   async delete(@Param('id') id: number) {
     try {
@@ -82,7 +82,7 @@ export class PostController {
     }
   }
 
-  @UseGuards(AccessGuard)
+  @UseGuards(PostAccessGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() body: UpdatePostDto) {
     try {

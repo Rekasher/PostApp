@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { Posts } from '../../../db/post-entities/post.entity';
 
 @Injectable()
-export class AccessGuard implements CanActivate {
+export class PostAccessGuard implements CanActivate {
   constructor(
     @InjectRepository(Posts)
     private postRepository: Repository<Posts>,
