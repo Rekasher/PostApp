@@ -57,15 +57,11 @@ export class CategoryService {
     }
   }
 
-  async delete(
-    id: number,
-  ): Promise<DeleteResult | BadRequestException | NotFoundException> {
+  async delete(id: number): Promise<DeleteResult | BadRequestException> {
     try {
       const node = await this.treeRepository.findOneOrFail({
         where: { id },
       });
-
-      if (node) return new NotFoundException('Category not found');
 
       const categories = await this.treeRepository.findDescendants(node, {
         relations: ['posts'],
@@ -86,15 +82,16 @@ export class CategoryService {
     }
   }
 
-  async update(id: number, data: UpdateCategoryDto): Promise<any> {
+  async update(
+    id: number,
+    data: UpdateCategoryDto,
+  ): Promise<Categories | BadRequestException> {
     try {
       const { category_name, parent_id } = data;
 
       const category = await this.treeRepository.findOneOrFail({
         where: { id },
       });
-
-      if (!category) return new NotFoundException('Category not found');
 
       if (category_name?.trim()) category.category_name = category_name;
 

@@ -54,11 +54,7 @@ export class CategoryController {
   @Roles(UserRole.ADMIN)
   async delete(@Param('id') id: number) {
     try {
-      await this.categoryService.delete(id);
-      return {
-        success: true,
-        message: 'Category was deleted successfully.',
-      };
+      return await this.categoryService.delete(id);
     } catch (error) {
       throw new BadRequestException(error, 'Not valid data');
     }
@@ -68,11 +64,7 @@ export class CategoryController {
   @Roles(UserRole.ADMIN)
   async update(@Param('id') id: number, @Body() body: UpdateCategoryDto) {
     try {
-      await this.categoryService.update(id, body);
-      return {
-        success: true,
-        message: 'Category was updated successfully',
-      };
+      return await this.categoryService.update(id, body);
     } catch (error) {
       throw new BadRequestException(error, 'Not valid data');
     }
