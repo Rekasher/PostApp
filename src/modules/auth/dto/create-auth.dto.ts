@@ -1,9 +1,6 @@
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 export class SignUpDto {
-  @IsNotEmpty({ message: 'name is required' })
-  name: string;
-
   @IsNotEmpty({ message: 'email is required' })
   @IsEmail({}, { message: "it's not email format" })
   email: string;

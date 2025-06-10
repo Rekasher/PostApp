@@ -19,11 +19,10 @@ export class UsersService {
 
   async create(userDto: CreateUserDto) {
     try {
-      const { email, name, password } = userDto;
+      const { email, password } = userDto;
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = this.usersRepository.create({
-        user_name: name,
         email: email,
         password: hashedPassword,
       });
@@ -55,7 +54,7 @@ export class UsersService {
   async findByAttributes(atr: UpdateUserDto): Promise<Users | null> {
     try {
       return await this.usersRepository.findOne({
-        where: [{ email: atr.email }, { user_name: atr.name }],
+        where: [{ email: atr.email }],
       });
     } catch (error) {
       throw new NotFoundException({ error: error, message: 'Users not found' });
