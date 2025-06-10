@@ -6,6 +6,9 @@ import { Comments } from '../comment-entities/comment.entity';
 
 @Entity('posts')
 export class Posts extends BaseEntity {
+  @Column({ type: 'varchar', length: 50 })
+  theme: string;
+
   @Column({ type: 'text' })
   content: string;
 

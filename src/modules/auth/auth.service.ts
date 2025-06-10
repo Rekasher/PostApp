@@ -15,16 +15,15 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp({ email, name, password }): Promise<any> {
+  async signUp({ email, password }): Promise<any> {
     const existingProfile = await this.userService.findByAttributes({
       email,
-      name,
     });
     if (existingProfile) {
       throw new ConflictException('User already exists');
     }
 
-    await this.userService.create({ email, name, password });
+    await this.userService.create({ email, password });
 
     return {
       success: true,
