@@ -8,9 +8,6 @@ export enum UserRole {
 
 @Entity('users')
 export class Users extends BaseEntity {
-  @Column({ unique: true, type: 'varchar', length: 25 })
-  user_name: string;
-
   @Column({ unique: true, type: 'varchar', length: 50 })
   email: string;
 
